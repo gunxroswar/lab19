@@ -3,6 +3,7 @@
 #include<vector>
 #include<string>
 #include<cstdlib>
+#include<iomanip>
 
 using namespace std;
 
@@ -20,20 +21,73 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string file,vector<string> &names,vector<int> &scores,vector<char> &grades){
+    ifstream source(file);
+    string text;
+    char format[] =" %[^:]: %d %d %d ";
+    while(getline(source,text)){
+        int x,y,z;
+        char *N;
+        N = new char[25];
+        const char * ch = text.c_str();
+        sscanf(ch,format,N,&x,&y,&z);
+        names.push_back(N);
+        scores.push_back(x+y+z);
+        grades.push_back(score2grade(x+y+z));
 
+    }   
 }
 
-void getCommand(){
-
+void getCommand(string &command,string &key){
+    cout << "Please input your command: ";
+    string word;
+    getline(cin,word);
+    int loc = word.find(" ");
+    command = word.substr(0,loc);
+    key = word.substr(loc+1,word.size()-loc-1);   
 }
 
-void searchName(){
-
+void searchName(vector<string> &names,vector<int> &scores,vector<char> &grades,string &key){
+    int N=names.size();
+    bool k=false;
+    for(int i =0;i<N;i++){
+        if(toUpperStr(names[i])==toUpperStr(key)){
+            k=true;
+            if(k==true){
+                cout << "---------------------------------\n";
+                cout << names[i] << "'s score = " << scores[i] << "\n";
+                cout << names[i] << "'s grade = " << grades[i] << "\n";
+                cout << "---------------------------------\n";
+            }
+        }
+    }
+    if(k==false){
+        cout << "---------------------------------\n";
+        cout << "Cannot found.\n";
+        cout << "---------------------------------\n";  
+    }
 }
+            
 
-void searchGrade(){
 
+void searchGrade(vector<string> &names,vector<int> &scores,vector<char> &grades,string &key){
+    int N=names.size();
+    bool k=false;
+    cout << "---------------------------------\n";
+    for(int i=0;i<N;i++){
+        string g;
+        g+=grades[i];
+        if(key == g){
+            k=true;
+            if(k == true){
+                cout << names[i] << " (" << scores[i] << ")\n";
+            }
+        }
+    }
+    if(k==false){
+        cout << "Cannot found.\n";    
+    }
+    cout << "---------------------------------\n";
 }
 
 
